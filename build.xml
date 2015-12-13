@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="sparql-api" default="package" xmlns:ivy="antlib:org.apache.ivy.ant">
+	<tstamp>
+		<format property="timestamp" pattern="yyyyMMddHHmmssSSS" locale="en"/>
+	</tstamp>
+
+  <property name="parent.prj.dir" value="${basedir}"/>
+
+	<property file="${basedir}/version-local.properties"/>
+	<property file="${basedir}/version.properties"/>
+
+	<property file="${basedir}/base-local.properties"/>
+	<property file="${basedir}/base.properties"/>
+
+	<property file="${basedir}/build-local.properties"/>
+	<property file="${basedir}/build.properties"/>
+
+  <target name="retrieve" description="Retrieves java dependencies">
+    <available property="has.ivy.cache.dir" file="${ivy.cache.dir}"/>
+
+    <fail unless="has.ivy.cache.dir" message="Please set ivy.cache.dir=/path/to/your/ivy/cache/dir in your local.properties file."/>
+
+    <ivy:configure file="ivysettings.xml"/>
+
+    <ivy:retrieve conf="compile"
+                  type="source,jar,bundle"
+                  pattern="${compile.lib.dir}/([classifier])/[module]-[revision](-[classifier]).[ext]"
+                  transitive="false"
+                  sync="false"/>
+
+    <ivy:retrieve conf="tool"
+                  type="source,jar,bundle"
+                  pattern="${tool.lib.dir}/([classifier])/[module]-[revision](-[classifier]).[ext]"
+                  transitive="false"
+                  sync="false"/>
+
+    <ivy:retrieve conf="test"
+                  type="source,jar,bundle"
+                  pattern="${test.lib.dir}/([classifier])/[module]-[revision](-[classifier]).[ext]"
+                  transitive="false"
+                  sync="false"/>
+  </target>
+
+	<target name="init" description="Creates directories not existing in the repository">
+		<mkdir dir="${classes.dir}"/>
+		<mkdir dir="${test.classes.dir}"/>
+    <mkdir dir="${compile.lib.dir}"/>
+    <mkdir dir="${tool.lib.dir}"/>
+    <mkdir dir="${test.lib.dir}"/>
+  </target>
+
+	<target name="clean" depends="init" description="Deletes compiled files">
+		<delete includeEmptyDirs="true">
+			<fileset dir="${classes.dir}" includes="**/*"/>
+			<fileset dir="${test.classes.dir}" includes="**/*"/>
+			<fileset dir="${target.dir}" includes="*.jar"/>
+		</delete>
+	</target>
+
+  <target name="clean-all" depends="clean" description="Deletes all created files">
+		<delete includeemptydirs="true">
+      <fileset dir="${compile.lib.dir}" includes="**/*"/>
+      <fileset dir="${tool.lib.dir}" includes="**/*"/>
+      <fileset dir="${test.lib.dir}" includes="**/*"/>
+		</delete>
+  </target>
+
+  <target name="compile" description="Compile the source code">
+    <taskdef resource="scala/tools/ant/antlib.xml">
+      <classpath>
+        <fileset dir="${tool.lib.dir}">
+          <include name="scala-compiler-*.jar"/>
+          <include name="scala-reflect-*.jar"/>
+        </fileset>
+        <fileset dir="${compile.lib.dir}">
+          <include name="scala-library-*.jar"/>
+        </fileset>
+      </classpath>
+    </taskdef>
+
+    <scalac srcdir="${scala.dir}" destdir="${classes.dir}">
+      <classpath>
+        <fileset dir="${compile.lib.dir}">
+          <include name="*.jar"/>
+        </fileset>
+      </classpath>
+    </scalac>
+  </target>
+
+  <target name="test-compile" depends="compile" description="Compile the source code">
+    <scalac srcdir="${test.scala.dir}" destdir="${test.classes.dir}">
+      <classpath>
+        <fileset dir="${compile.lib.dir}">
+          <include name="*.jar"/>
+        </fileset>
+        <dirset dir="${target.dir}" includes="${classes.dir.name}"/>
+        <fileset dir="${test.lib.dir}">
+          <include name="*.jar"/>
+        </fileset>
+      </classpath>
+    </scalac>
+  </target>
+
+  <target name="test" depends="test-compile">
+    <taskdef name="scalatest" classname="org.scalatest.tools.ScalaTestAntTask">
+      <classpath>
+        <fileset dir="${compile.lib.dir}">
+          <include name="*.jar"/>
+        </fileset>
+        <fileset dir="${test.lib.dir}">
+          <include name="*.jar"/>
+        </fileset>
+      </classpath>
+    </taskdef>
+
+    <scalatest membersonly="net.izedio.sparqlapi" haltonfailure="true">
+      <reporter type="stdout" config="WF"/>
+
+      <runpath>
+        <dirset dir="${target.dir}" includes="${classes.dir.name}"/>
+        <dirset dir="${target.dir}" includes="${test.classes.dir.name}"/>
+      </runpath>
+    </scalatest>
+  </target>
+
+  <target name="jar" depends="compile" description="Creates the project library">
+    <jar destfile="${sparql-api.jar.file}">
+      <fileset dir="${classes.dir}" includes="**/*.class"/>
+    </jar>
+  </target>
+
+	<target name="package" depends="clean,test,jar" description="Assembles the project package"/>
+</project>

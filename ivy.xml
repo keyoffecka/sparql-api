@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ivy-module version="2.0">
+  <info organisation="net.izedio" module="idio-s"/>
+
+  <configurations defaultconf="compile"
+                  defaultconfmapping="compile->*,!javadoc;provided->*,!javadoc;runtime->*,!javadoc;tool->*,!javadoc;test->*,!javadoc">
+
+    <conf name="compile"/>
+    <conf name="provided"/>
+    <conf name="runtime"/>
+    <conf name="tool"/>
+    <conf name="test"/>
+  </configurations>
+
+  <dependencies>
+    <dependency org="org.slf4j" name="slf4j-api" rev="${slf4j.version}" conf="compile"/>
+	  <dependency org="javax.inject" name="javax.inject" rev="${cdi-api.version}" conf="compile"/>
+	  <dependency org="javax.annotation" name="javax.annotation-api" rev="${annotation-api.version}" conf="compile"/>
+
+    <dependency org="org.scala-lang" name="scala-library" rev="${scala.long.version}" conf="compile"/>
+
+	  <dependency org="com.google.guava" name="guava" rev="${guava.version}" conf="compile"/>
+
+    <dependency org="org.apache.httpcomponents" name="httpclient" rev="${httpclient}" conf="compile"/>
+    <dependency org="org.apache.httpcomponents" name="httpcore" rev="${httpcore}" conf="compile"/>
+
+	  <dependency org="org.springframework" name="spring-core" rev="${spring.version}" conf="compile"/>
+	  <dependency org="org.springframework" name="spring-beans" rev="${spring.version}" conf="compile"/>
+	  <dependency org="org.springframework" name="spring-context" rev="${spring.version}" conf="compile"/>
+	  <dependency org="org.springframework" name="spring-expression" rev="${spring.version}" conf="compile"/>
+
+	  <dependency org="org.slf4j" name="jul-to-slf4j" rev="${slf4j.version}" conf="compile"/>
+	  <dependency org="org.slf4j" name="log4j-over-slf4j" rev="${slf4j.version}" conf="compile"/>
+	  <dependency org="org.slf4j" name="jcl-over-slf4j" rev="${slf4j.version}" conf="compile"/>
+
+	  <dependency org="ch.qos.logback" name="logback-core" rev="${logback.version}" conf="compile"/>
+	  <dependency org="ch.qos.logback" name="logback-classic" rev="${logback.version}" conf="compile"/>
+
+    <dependency org="org.scala-lang" name="scala-reflect" rev="${scala.long.version}" conf="tool"/>
+    <dependency org="org.scala-lang" name="scala-compiler" rev="${scala.long.version}" conf="tool"/>
+
+	  <dependency org="junit" name="junit" rev="${junit.version}" conf="test"/>
+    <dependency org="org.mockito" name="mockito-core" rev="${mockito.version}" conf="test"/>
+	  <dependency org="org.hamcrest" name="java-hamcrest" rev="${java-hamcrest.version}" conf="test"/>
+    <dependency org="org.objenesis" name="objenesis" rev="${objenesis.version}" conf="test"/>
+    <dependency org="org.scalatest" name="scalatest_${scala.version}" rev="${scalatest.version}" conf="test"/>
+    <dependency org="org.scala-lang.modules" name="scala-xml_${scala.version}" rev="${scala-xml.version}" conf="test"/>
+  </dependencies>
+</ivy-module>
