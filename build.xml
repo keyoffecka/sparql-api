@@ -19,7 +19,7 @@
   <target name="retrieve" description="Retrieves java dependencies">
     <available property="has.ivy.cache.dir" file="${ivy.cache.dir}"/>
 
-    <fail unless="has.ivy.cache.dir" message="Please set ivy.cache.dir=/path/to/your/ivy/cache/dir in your local.properties file."/>
+    <fail unless="has.ivy.cache.dir" message="Please set ivy.cache.dir=/path/to/your/ivy/cache/dir in your build-local.properties file."/>
 
     <ivy:configure file="ivysettings.xml"/>
 

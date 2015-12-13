@@ -31,7 +31,8 @@ This library supports **query** and **update** operations, allows to use *GET*, 
 PREFIX mapping is not yet supported, thus for now the queries should include PREFIX definitions. net.izedio.sparqlapi.Request.mappings is ignored.
 
 # How to build
-You need to have ant and ivy installed
+You need to have Ant and Ivy installed.
+Remember to create your workspace specific build-local.properties file and set ivy.cache.dir property. This property defines a path to the Ivy repository.
 
 *ant retrieve package*
 
